@@ -9,9 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
     <style>
       :root{
-          --themecolor: white;
-          --tcolorchanger: #d17ac0;
-          --themecolor2: black;
+          --TC-Default: white;
+          --TC-Theme: #d17ac0;
+          --TC-Default2: black;
       }
       body {
     display: flex;
@@ -30,7 +30,7 @@
     /* Remove the margin property */
 }
     .back-light {
-        background: var(--themecolor); /* Changed to white */
+        background: var(--TC-Default); /* Changed to white */
         border-radius: 20px;
         width: 141.42px;
         height: 141.42px;
@@ -43,7 +43,7 @@
         transition: background 0.5s ease;
     }
     .black-frame {
-        background: var(--themecolor2);
+        background: var(--TC-Default2);
         border-radius: 20px;
         width: 129.33px;
         height: 129.33px;
@@ -57,7 +57,7 @@
         -webkit-appearance: none;
         appearance: none;
         border-radius: 1px;
-        background: var(--themecolor);
+        background: var(--TC-Default);
         width: 69.45px;
         height: 2px;
         position: absolute;
@@ -69,14 +69,14 @@
     .seek-slider::-webkit-slider-thumb {
         -webkit-appearance: none;
         appearance: none;
-        background: var(--themecolor);
+        background: var(--TC-Default);
         border-radius: 50%;
         width: 8px;
         height: 8px;
         transition: background 0.5s ease;
     }
     .playtime {
-        color: var(--themecolor); /* Changed to white */
+        color: var(--TC-Default); /* Changed to white */
         text-align: left;
         font-family: "Inria Sans", sans-serif; 
         font-size: 9.461531639099121px;
@@ -94,13 +94,13 @@
     cursor: pointer;
     transition: filter 0.5s ease;
     --shadow-opacity: 0.75; /* Adjust this value for shadow opacity */
-    --shadow-color: var(--themecolor);
+    --shadow-color: var(--TC-Default);
     --webkit-filter: drop-shadow(0 0 5px var(--shadow-color));
     filter: drop-shadow(0 0 5px var(--shadow-color));
 }
 
     .play, .previous, .next, .pause, .headphones path {
-        fill:var(--themecolor);
+        fill:var(--TC-Default);
 }
 
 
@@ -142,7 +142,7 @@
     }
 
     .music-image{
-      border: 2px solid var(--themecolor);
+      border: 2px solid var(--TC-Default);
     }
 
     .music-image{
@@ -239,15 +239,12 @@ function updatePlayTime() {
       return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
 
-    function changeThemeColor() {
-    const currentColor = getComputedStyle(document.documentElement).getPropertyValue('--themecolor').trim();
-    const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--tcolorchanger').trim();
-    const defaultColor = 'white'; // Default color
-    if (currentColor === defaultColor) {
-        document.documentElement.style.setProperty('--themecolor', themeColor);
-    } else {
-        document.documentElement.style.setProperty('--themecolor', defaultColor);
-    }
+function changeThemeColortoTheme() {
+  document.documentElement.style.setProperty('--TC-Default', getComputedStyle(document.documentElement).getPropertyValue('--TC-Theme').trim());
+}
+
+function changeThemeColortoDefault() {
+  document.documentElement.style.setProperty('--TC-Default', 'white');
 }
 
 function onPlayerStateChange(event) {
@@ -260,13 +257,13 @@ function onPlayerStateChange(event) {
         headphones.style.display = 'none';
         playButton.style.display = 'none';
         pauseButton.style.display = 'block';
-        changeThemeColor();
+        changeThemeColortoTheme();
       } else if (event.data === YT.PlayerState.PAUSED) {
         musicImage.style.display = 'none';
         playButton.style.display = 'block';
         pauseButton.style.display = 'none';
         headphones.style.display = 'block';
-        changeThemeColor();
+        changeThemeColortoDefault();
       }
     }
 
@@ -295,12 +292,13 @@ function onPlayerStateChange(event) {
     // Event listener for previous button click
     previousButton.addEventListener('click', () => {
       player.previousVideo(); // Play the previous video in the playlist
+      player.seekTo(0);
     });
 
     seekSlider.addEventListener('input', (e) => {
       const seekTo = player.getDuration() * (e.target.value / 100);
       player.seekTo(seekTo, true);
-      changeThemeColor();
+      changeThemeColortoTheme();
     });
   </script>
 </body>
